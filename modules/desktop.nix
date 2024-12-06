@@ -1,8 +1,9 @@
-{ config, pkgs, lib, mapHomeManagerUsers, ...}:
+{ config, pkgs, lib, mapHomeManagerUsers, ... }:
 with lib;
 let
   cfg = config.midgard.pc;
-in {
+in
+{
   options.midgard.pc = {
     desktop = mkOption {
       type = with types; nullOr (enum [ "gnome" "plasma" "sway" ]);
@@ -22,7 +23,7 @@ in {
         };
 
         # Remove unused programs
-        environment.gnome.excludePackages = (with pkgs.gnome; [
+        environment.gnome.excludePackages = (with pkgs; [
           epiphany # webbrowser use firefox
           geary # email reader
         ]);
@@ -37,7 +38,7 @@ in {
 
       (mkIf (cfg.desktop == "sway") {
         security.polkit.enable = true;
-        security.pam.services.swaylock = {};
+        security.pam.services.swaylock = { };
         programs.light.enable = true;
 
         users.users = mapHomeManagerUsers (name: user: {
@@ -70,13 +71,13 @@ in {
         services.greetd = {
           enable = true;
           settings = {
-          default_session.command = ''
-            ${pkgs.greetd.tuigreet}/bin/tuigreet \
-              --time \
-              --asterisks \
-              --user-menu \
-              --cmd sway
-          '';
+            default_session.command = ''
+              ${pkgs.greetd.tuigreet}/bin/tuigreet \
+                --time \
+                --asterisks \
+                --user-menu \
+                --cmd sway
+            '';
           };
         };
 
